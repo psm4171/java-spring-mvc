@@ -1,0 +1,34 @@
+# URL Pattern
+
+# URL Pattern (Servlet에서의 URL Pattern)
+
+- `/`: default servlet
+- `/*`: 하위 경로 전체
+    - ex.) `/foo/bar/*`
+        - `/foo/bar/1` (O)
+        - `/foo/bar/1/2/3.html` (O)
+        - `/foo/var` (X)
+- `.do`: 확장자 매칭 (확장자가 `.do`인 경우)
+
+# URL Pattern (Spring MVC에서의 URL Pattern)
+
+# **Ant style Pattern 지원**
+
+- `?` : 1글자 매칭
+- `` : 0글자 이상 매칭
+- `*` : 0글자 이상 하위 경로 매칭
+
+# **Ex.)**
+
+- `c?t`
+    - `cat` (O)
+    - `cut` (O)
+    - `cert` (X)
+- `/users/*`
+    - `/users/1` (O)
+    - `/users/2` (O)
+    - `/users/1/profile` (X)
+- `/users/**`
+    - `/users/1` (O)
+    - `/users/1/profile` (O)
+    - `/users/1/profile/1` (O)

@@ -32,3 +32,29 @@
     - `/users/1` (O)
     - `/users/1/profile` (O)
     - `/users/1/profile/1` (O)
+
+
+# Model Attribute
+
+# `@ModelAttribute`
+
+# **메서드 인자로 선언된 경우: 모델에서 속성 값을 추출해올 때 사용**
+
+```java
+@PostMapping("/user/register")
+public String registerUser(@ModelAttribute UserRegisterRequest userRequest) {
+    // ...
+}
+```
+
+
+# `@ModelAttribute`
+
+# **메서드에 선언된 경우: 모든 `@RequestMapping`에 앞서 호출되어 공통 속성을 제공**
+
+```java
+@ModelAttribute("user")
+public User getUser(@PathVariable("userId") String userId) {
+    return userRepository.getUser(userId);
+}
+```

@@ -1,0 +1,277 @@
+# Day 1
+
+# Spring MVC
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/30914778-8bfa-404a-8db1-10f28062c17e/f4c3ad8f-c6c3-42b9-a9f1-b609f686c93c/Untitled.png)
+
+- Spring MVC란? MVC 패턴을 스프링 프레임워크에서 제공하는 것
+- 생산성 이득의 발생
+- 모델, 뷰, 컨트롤러를 구분하여 개발
+- 각각의 역할별로 코드가 명확하게
+- Model : 비즈니스 로직 및 데이터 처리 담당
+- VIew : 모델이 처리한 결과 데이터의 화면 생성 담당
+- Controller : 요청 처리 및 흐름 제어 담당
+
+# ****JavaBeans/JSP/Servlet (JSP Model2)****
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/30914778-8bfa-404a-8db1-10f28062c17e/ab1f9ac8-18d8-45ac-9d73-f782f432e7a8/Untitled.png)
+
+# NHN Mart의 구성
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/30914778-8bfa-404a-8db1-10f28062c17e/4f64a5bd-5aae-4319-ac04-b2e1fb4ab175/Untitled.png)
+
+- Front Servlet이 Command 쪽으로 호출하고 HttpServlet을 동작시키는 부분
+- Command는 카트 리스트와 푸드 리스트 클래스의 메서드를 구성
+
+Servlet은 해당 스펙에 물리는듯한, 테스트하기 어려운 부분이 존재했다. 
+
+→ 따라서 Controller를 구분하여 기능을 따로 구현 
+
+# Spring MVC 에서의 Front Controller
+
+# **DispatcherServlet**
+
+- Spring MVC Framework의 중심이 되는 Servlet
+- `Controller`로 향하는 모든 웹 요청의 entry point
+- `Front Controller` 디자인 패턴의 표현
+
+!https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/images/mvc.png
+
+- 서블릿 엔진인 톰캣 기반으로 동작한다.
+- 컨트롤러는 모델을 반환
+- 뷰 템플릿은 컨트롤러를 반환
+
+#스프링 부트가 어떻게 편리한지 알아야 내부적인 로직을 이해할 수 있다. 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/30914778-8bfa-404a-8db1-10f28062c17e/86addd6f-b22a-4cbe-bcdb-87dea9085fd3/Untitled.png)
+
+# **View : 일단 JSP**
+
+# **남는 건?**
+
+- Controller
+
+# Controller
+
+# Controller
+
+- MVC 패턴에서 `Controller` 역할
+    - 요청 처리 및 흐름 제어 담당
+- Front Controller 패턴에서 `Command` interface 구현 클래스에 해당
+    - 실제 웹 요청을 처리하는 역할
+
+# Controller 구현
+
+# **`@Controller`**
+
+- stereo type bean 중 하나: component scan 과정을 통해 자동으로 bean 등록
+
+```
+@Controller                         // <-- Controller 임을 지정
+public class HomeController {
+    @GetMapping("/")                // <-- HTTP Method 지정, URL 맵핑
+    public String index() {
+        return "index";             // <-- view 이름 지정
+    }
+}
+```
+
+#Http에서 put은 무엇을 의미할까? 
+
+**수정하는 것을 의미한다.** 
+
+**역등성 : 예를 들어 put을 던졌을 때 값이 있으면 수정, 없으면 등록한다.** 
+
+**즉, 언제 다시 호출해도 똑같은 서버 상태가 나와야 한다.**
+
+Request Mapping
+
+- 요청을 Controller 메서드에 매핑
+- @RequestMapping(”/persons”)  : url만 매핑한 것
+- @RequestMapping
+
+# **`@RequestMapping`을 통한 HTTP Method 맵핑**
+
+- 스프링 프레임워크에서 지원하는 메서드 맵핑
+
+```
+@RequestMapping(value = "/persons", method=RequestMethod.GET)// Get만 동작
+@RequestMapping(value = "/persons", method=RequestMethod.POST)
+@RequestMapping(value = "/persons", method=RequestMethod.PUT) -> 역등성 있게 
+@RequestMapping(value = "/persons", method=RequestMethod.DELETE)
+@RequestMapping(value = "/persons", method=RequestMethod.PATCH)
+@RequestMapping(value = "/persons", method=RequestMethod.HEAD)
+@RequestMapping(value = "/persons", method=RequestMethod.OPTIONS)
+@RequestMapping(value = "/persons", method=RequestMethod.TRACE)
+```
+
+- PATCH : PUT 값 중 하나만 바꿀 때 사용
+
+```
+PUT /persons
+            {
+                "name": "dongmyo",
+                "age": 19,
+                "address": "Ulsan, Korea"
+            }
+```
+
+# **HTTP Method 맵핑은 줄여서**
+
+- `@GetMapping` **==** `@RequestMapping(method=RequestMethod.GET)`
+- `@PostMapping` **==** `@RequestMapping(method=RequestMethod.POST)`
+- `@PutMapping` **==** `@RequestMapping(method=RequestMethod.PUT)`
+- `@DeleteMapping` **==** `@RequestMapping(method=RequestMethod.DELETE)`
+- `@PatchMapping` **==** `@RequestMapping(method=RequestMethod.PATCH)`
+
+파라미터를 가지고 핸들러와 연결하는 방법, ****request parameter와 연결하는 방법****
+
+# **request parameter와 연결하는 방법**
+
+- **id** parameter가 있는 경우에만
+
+```
+@RequestMapping(method = RequestMethod.GET, params = { "id" })
+
+```
+
+- **id** parameter가 없는 경우에만
+
+```
+@GetMapping(params = { "!id" })
+
+```
+
+- **type** parameter 값이 **raw**인 경우에만
+
+```
+@GetMapping(params = "type=raw")
+
+```
+
+- **type** parameter 값이 **raw**가 아닌 경우에만
+
+```
+@GetMapping(params = "type!=raw")
+```
+
+# Controller Method
+
+# **Ex.)**
+
+```java
+@GetMapping("/")
+public String index() {             // return type: String, method argument: 없음
+    return "index";
+}
+
+```
+
+```java
+@GetMapping("/{id}") 
+public Person getPerson(@PathVariable Long id) {        // return type: Person
+    // id를 받았을 때, 동작하도록                                              // method argument: @PathVariable
+    return person;
+}
+
+```
+
+```java
+@PostMapping
+public String doLogin(Member loginInfo, HttpSession session) {    
+// return: `redirect:'
+    //                                                         // method argument: HttpSession
+    return "redirect:/login";
+}
+```
+
+# Controller Method에서 사용 가능한 method argument
+
+- HttpServletRequest, HttpServletResponse, HttpSession, WebRequest
+
+**→ HttpServletRequest : 파일 업로드할 때 많이 사용**
+
+**→ HttpServletResponse : 파일 다운로드 처리할 때 많이 사용** 
+
+**→ HttpSession : 사용자 로그인 정보를 서버에 남길 때 사용** 
+
+WebRequest : HttpRequest를 축약한 것 
+
+- Locale
+
+→ 다국어 관련 처리
+
+- InputStream, OutputStream, Reader, Writer
+- `@PathVariable`, `@RequestParam`, `@RequetHeader`, `@CookieValue`, `@Value`
+- Map, Model, ModelMap, `@ModelAttribute`, `@RequestBody`
+- Errors, BindingResult, ...
+
+# Controller Method에서 사용 가능한 return type
+
+- ModelAndView, View :
+- Map, Model, ModelMap
+- String
+- void
+- `@ResponseBody`
+- POJO
+
+요청 parameter 받아오기 
+
+@RequestParam 
+
+- 요청 url의 쿼리 스트링을 처리하기 위한 어노테이션
+- `GET http://localhost:8080/persons?order=-createdAt` 요청 url
+
+```
+@GetMapping("/persons")
+public List<Person> getPersons(@RequestParam(name="order") String order) {
+    // ...
+}
+```
+
+# 요청 URL의 가변 인자 가져오기 (`@PathVariable`)
+
+# **`@PathVariable`**
+
+- 요청 URL의 Resource(Path)을 처리하기 위한 어노테이션
+    - `@RequestMapping` 의 path 에 변수명을 입력받기 위한 place holder 가 필요함
+
+# **Ex.)**
+
+- 요청 URL
+
+```
+GET http://localhost:8080/persons/99499102
+
+```
+
+- Controller Method
+
+```
+@GetMapping("/persons/{personId}")
+public List<Person> getPersons(@PathVariable(name="personId", required=true) Long personId) {
+    // ...
+}
+```
+
+# HTTP cookie
+
+- HTTP 쿠키를 처리하기 위한 어노테이션
+- 인증용으로 사용하는 것은 보안상 이슈
+- 서버 입장에서는 한 번 접속된 브라우저가 똑같은 쿠키를 보내기 때문에 인지 가능
+- 장바구니 기능에 사용 되었는데 브라우저에 표시되는 보안적 이슈로 db에서 실행
+- 
+
+서버쪽으로 쿠키를 서버로 요청하면 요청할 때마다 같이 이동. 
+
+세션 : 특정 사용자가 접근할 수 있는 경위된 공간, —>
+
+쿠키 : 클라이언트 브라우저에 저장 및 생성된 데이터 조각들 —> 사용자를 식별할 수 있는 조각이 될 수 있고, 
+
+회원 정보를 저장
+
+[URL Pattern](https://www.notion.so/URL-Pattern-288a04aed2c741eb9e0e63fb65f1b971?pvs=21)
+
+[Model Attribute](https://www.notion.so/Model-Attribute-17a3c95699a34e5cb9e90b8c275abc57?pvs=21)
+
+[과제 내용 ](https://www.notion.so/517affb74bbb47658a91460a3fdcdd62?pvs=21)
